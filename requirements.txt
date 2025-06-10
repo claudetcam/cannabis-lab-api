@@ -1,4 +1,6 @@
+flask
+selenium
 gspread
 oauth2client
-selenium
 webdriver-manager
+gunicorn
