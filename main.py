@@ -1,4 +1,6 @@
 from flask import Flask
+import os
+import json
 import time
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -11,12 +13,14 @@ app = Flask(__name__)
 
 @app.route("/")
 def run_script():
-    # Étape 1 : Authentification Google Sheets
-    json_keyfile = "credentials.json"
+    # Étape 1 : Authentification Google Sheets depuis variable d’environnement
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/1ZGZdBOn3nbOd7LVOG6-LSQ9jfxGlXEtxhLD7YYvWzd8/edit"
-
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(json_keyfile, scope)
+
+    # Charger la clé JSON depuis la variable d'environnement
+    credentials_json = os.environ.get("GOOGLE_CREDENTIALS")
+    credentials_dict = json.loads(credentials_json)
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
     client = gspread.authorize(credentials)
 
     sheet = client.open_by_url(spreadsheet_url).worksheet("Labs-Massachusetts")
@@ -51,9 +55,8 @@ def run_script():
 
     driver.quit()
 
-    # Étape 3 : Update Sheet
+    # Étape 3 : Mise à jour du Google Sheet
     sheet.resize(rows=3)
     sheet.update("A4", labs)
 
     return f"{len(labs)} laboratoires actifs mis à jour avec succès ✅"
-
