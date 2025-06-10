@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "cannabis-lab-cloud",
+  "private_key_id": "f479e3164b677d17554d06b2c199549d2ecd3166",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQD6n93w3BQK1Dzx\nktihleOZbs1tEyUhHeliYHyMbcou/vzlrigg5mGwWccjKHqoaF8ZhLrar7iwafPR\nwOrAXzEok7LeLvXCLlMN20YRKTybr90THKlI/WJjdTfruoncpKHrOea7NKUynczD\n5pOZiOU8+rKCV5v9lguPygzHoldvUrIwDTncshLjB0Wv/bJ3D+3sSYjqnLRXTAlN\nDu9y1uInf0sd/FUiZyUc/fIVKYsM++UyTHpgka2OHi5HMXWPYJZ/K27Sl3ii1mGp\ndMnTZ395HdJOCxzv4Zin6pv+oBGHtuqFazZunHWEsIfUucWjZGRtlZS8aT0x5Qjr\ng5p9oW/7AgMBAAECggEAPiZ+50fsQHM5Wb7MseV1t4rernnc70V3psm+mSRwyw64\nsExr7xyyhQT+eR2ErVaUnsNnguuopTbhG9b3YBU7H5Dg/nAuyaSrO/hwe7j6KrGF\n5UNqR4tuZrOe1no/zdOVw7tsGGiJvu+a48m+OIjWMDULJ3+KU2xuGY5FdQwxGo2t\nuLb8OaO1pyseWpvb2Pvg4GEF//vpFLdWMoO0E/ClxwO+jAz3shP3/vrKra47pQR6\nxKNPFzpeS1xaO8LgymhySB2cT+a3Gb6m1hS0HSsfBlzfktgfUNLfr/ntoFiX0lcd\nCdm6Sr/Y5K4bHQHaZJetYGBh3VAFP6UThQQd9PAygQKBgQD/GyV/UvWQ9GyrZ4C/\nwoa9vUh1vhlqQtbPmlg2+cfY4EYUOLyk1iOyn4MxVCGzSEb50xmm4LrBmMdAb+ly\nB+ruTPQDsrcqKocHE+SbgQj/GsXcTGMhf6WphU0yeIEVUqf6MfmWH3edszCWnAHy\nsOzC6HoS8p91nkBro2nzBvBrqwKBgQD7gLM6fybwRq0qevw/b2u7/lUW8D9ZsijQ\ncjodGggkMBNioENY27y0SWQri2WTy4J0JNIdHYZPm/P7YsM/ff0s8cLpHa+uK9qn\nkWl1rg6q8DU2l/9G1/kjUtpw/GoWb2uR3MHFCPuUI82yarscH5x1mlA1hbXULvu0\nPxiJRDA88QKBgQC/S6P6rkLmx+MVRTAOm9heP6ouYLa+MBDU7HBqCTQLNWJXl5Qe\nJ1XthB/kxanfvrs6a0o5ERv6QI5pi4IKuFU7DQmOHF2tiOZoMEqlMUWFxpXIdJ+B\nZy7ax9LzndluG+VKgF8ga8hOwSgWSDZNvs5L+fhQbQ+WK20zSf8Q9osisQKBgQDB\n9VlDrbfr6bW2Yy6SBW3Ch7w7eoCAviM3zj//HYpVzjXFA++sYZpAN7Fm25Q0zOgI\nhjT8ez6PuqgIoPwOxS0xMims+lX4Lp3sSPpZ5SgusB15wvL+QaVDlqwcIq32K2t8\nDBHr0KekcZA7HpC6ea6CC8X74Oh/gNRhB5/2jH3fIQKBgQCGf2X/vpurkZhVA0Rv\nFIfpTIZ1TKgBUVKjZgREY883rU77Qs3554HFyD2RnD1LBs5dxUntWiPsZMIeMYMR\ncevxTrAxlQSMhrUuGTsmv16hJs1f4JfJwsYIsqJ8dAKT6Wo0T9ccIwL7AmbYF5fs\nmacv1vyRu33unRgKv5WDTyT21w==\n-----END PRIVATE KEY-----\n",
+  "client_email": "colab-service-account@cannabis-lab-cloud.iam.gserviceaccount.com",
+  "client_id": "100182910803810691797",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/colab-service-account%40cannabis-lab-cloud.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
