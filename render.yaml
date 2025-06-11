@@ -2,10 +2,10 @@ services:
   - type: web
     name: cannabis-lab-api
     env: python
-    build:
-      command: |
-        pip install -r requirements.txt
-        bash install_playwright.sh
+    buildCommand: |
+    pip install -r requirements.txt
+    playwright install
+       startCommand: gunicorn main:app
     startCommand: gunicorn main:app
     envVars:
       - key: GOOGLE_APPLICATION_CREDENTIALS
