@@ -19,4 +19,4 @@ RUN mkdir -p /etc/secrets
 EXPOSE 10000
 
 # Lancer gunicorn
-CMD ["gunicorn", "main:app", "--bind", "0.0.0.0:10000"]
+CMD ["gunicorn", "main:app", "--bind", "0.0.0.0:10000", "--timeout", "180"]
