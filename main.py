@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route("/")
 def run_script():
     # Étape 1 : Authentification Google Sheets
-    json_keyfile = "credentials.json"
+    json_keyfile = "/etc/secrets/credentials.json"
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/1ZGZdBOn3nbOd7LVOG6-LSQ9jfxGlXEtxhLD7YYvWzd8/edit"
 
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -56,4 +56,3 @@ def run_script():
     sheet.update("A4", labs)
 
     return f"{len(labs)} laboratoires actifs mis à jour avec succès ✅"
-
