@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 set -x
 
-# Télécharger et installer Google Chrome
+# Installer les dépendances
+apt-get update && apt-get install -y wget curl unzip gnupg2
+
+# Télécharger Chrome
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-apt-get update
+
+# Installer Chrome
 apt-get install -y ./google-chrome-stable_current_amd64.deb
 
-# Création du lien symbolique attendu par Selenium
-ln -s /usr/bin/google-chrome-stable /usr/bin/google-chrome
+# Créer un lien symbolique à l’emplacement attendu par Selenium
+mkdir -p /opt/google/chrome
+ln -s /usr/bin/google-chrome /opt/google/chrome/google-chrome
 
 # Nettoyage
 rm google-chrome-stable_current_amd64.deb
