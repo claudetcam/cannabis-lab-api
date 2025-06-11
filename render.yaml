@@ -3,9 +3,8 @@ services:
     name: cannabis-lab-api
     env: python
     buildCommand: |
-    pip install -r requirements.txt
-    playwright install
-       startCommand: gunicorn main:app
+      pip install -r requirements.txt
+      playwright install
     startCommand: gunicorn main:app
     envVars:
       - key: GOOGLE_APPLICATION_CREDENTIALS
@@ -13,4 +12,3 @@ services:
     secretFiles:
       - source: credentials.json
         mountPath: /etc/secrets/credentials.json
-        
