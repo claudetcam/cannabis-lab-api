@@ -4,12 +4,14 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 
 app = Flask(__name__)
 
 @app.route("/")
 def run_script():
+    # Étape 1 : Authentification Google Sheets
     json_keyfile = "/etc/secrets/credentials.json"
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/1ZGZdBOn3nbOd7LVOG6-LSQ9jfxGlXEtxhLD7YYvWzd8/edit"
 
@@ -19,13 +21,16 @@ def run_script():
 
     sheet = client.open_by_url(spreadsheet_url).worksheet("Labs-Massachusetts")
 
+    # Étape 2 : Configuration Chrome compatible avec Render
     options = Options()
-    options.binary_location = "/usr/bin/google-chrome"  # ✅ chemin correct sur Render
+    options.binary_location = "/opt/render/project/.render/chrome/opt/google/chrome"
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    driver = webdriver.Chrome(options=options)
+    chrome_service = ChromeService(executable_path="/opt/render/project/.render/chromedriver/stable/chromedriver")
+    driver = webdriver.Chrome(service=chrome_service, options=options)
+
     driver.get("https://masscannabiscontrol.com/licensing-tracker/")
     time.sleep(5)
 
@@ -48,6 +53,8 @@ def run_script():
             continue
 
     driver.quit()
+
+    # Étape 3 : Mise à jour Google Sheet
     sheet.resize(rows=3)
     sheet.update("A4", labs)
 
