@@ -6,15 +6,16 @@ WORKDIR /app
 
 # Copy requirements and install
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt \
+ && playwright install --with-deps
 
 # Copie ton app
 COPY . .
 
-# Ajoute les credentials secrets dans le container (via Render)
+# Crée dossier pour les secrets (Render les montera ici)
 RUN mkdir -p /etc/secrets
 
-# Expose port (facultatif)
+# Expose port (facultatif pour local, utile pour Render)
 EXPOSE 10000
 
 # Lancer gunicorn
