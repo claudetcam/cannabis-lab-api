@@ -1,62 +1,36 @@
-# scraper.py
-import os
-import time
-import datetime
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+import threading
 from playwright.sync_api import sync_playwright
+import time
 
 def run_script():
-    print("Début du script...")
+    print("🔧 Lancement du script de scraping...")
 
-    # 1. Authentification Google Sheets
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds_path = "/etc/secrets/credentials.json"
-    creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
-    client = gspread.authorize(creds)
-
-    sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1ZGZdBOn3nbOd7LVOG6-LSQ9jfxGlXEtxhLD7YYvWzd8/edit").sheet1
-    sheet.clear()
-    sheet.append_row(["Nom du laboratoire", "Type", "Adresse", "Dernière mise à jour", "URL"])
-
-    print("Google Sheet prêt, lancement du scraping...")
-
-    # 2. Scraping avec Playwright
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-        page.goto("https://www.masscannabiscontrol.com/licensed-marijuana-establishments/", timeout=60000)
+        context = browser.new_context()
+        page = context.new_page()
 
-        print("Page chargée, traitement des filtres...")
+        url = "https://masscannabiscontrol.com/list-of-licensees/"
+        page.goto(url)
+        print("✅ Page chargée")
 
-        # Cliquez sur "License Type" et cochez "Independent Testing Laboratory"
-        page.locator("button:has-text('License Type')").click()
-        page.wait_for_timeout(500)
-        page.get_by_label("Independent Testing Laboratory").check()
-        page.wait_for_timeout(1000)
+        # Attendre que la page se charge complètement
+        page.wait_for_timeout(5000)
 
-        # Cliquez sur "Apply Filters"
-        page.get_by_role("button", name="Apply Filters").click()
-        page.wait_for_timeout(2000)
+        # DEBUG : Sauvegarder le HTML pour analyse
+        html = page.content()
+        with open("page_debug.html", "w", encoding="utf-8") as f:
+            f.write(html)
+        print("📄 HTML sauvegardé dans 'page_debug.html'")
 
-        print("Filtre appliqué, lecture des lignes...")
-
-        # Extraction des données
-        rows = page.locator("table tbody tr")
-        row_count = rows.count()
-
-        for i in range(row_count):
-            row = rows.nth(i)
-            cols = row.locator("td")
-            nom = cols.nth(0).inner_text().strip()
-            type_lab = cols.nth(1).inner_text().strip()
-            adresse = cols.nth(2).inner_text().strip()
-            update = cols.nth(3).inner_text().strip()
-            url = cols.nth(0).locator("a").get_attribute("href")
-
-            sheet.append_row([nom, type_lab, adresse, update, url])
-            print(f"{i+1}/{row_count} ajouté : {nom}")
+        # Essayer de cliquer sur le bouton
+        try:
+            page.locator("button:has-text('License Type')").click()
+            print("✅ Bouton 'License Type' cliqué")
+        except Exception as e:
+            print("❌ Erreur lors du clic sur le bouton :", e)
 
         browser.close()
 
-    print("✅ Script terminé avec succès.")
+# Lancer le script dans un thread au démarrage
+threading.Thread(target=run_script).start()
