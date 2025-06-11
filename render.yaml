@@ -3,9 +3,10 @@ services:
     name: cannabis-lab-api
     env: python
     buildCommand: |
-  chmod +x install_chrome.sh
-  ./install_chrome.sh
-  pip install -r requirements.txt
+    chmod +x install_chrome.sh
+    dos2unix install_chrome.sh  # facultatif si t'as copié-collé depuis Windows
+    ./install_chrome.sh
+    pip install -r requirements.txt
     startCommand: gunicorn main:app
     envVars:
       - key: GOOGLE_APPLICATION_CREDENTIALS
