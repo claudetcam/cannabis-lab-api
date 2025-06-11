@@ -23,7 +23,7 @@ def run_script():
 
     # Étape 2 : Configuration Chrome compatible avec Render
     options = Options()
-    options.binary_location = "/usr/bin/google-chrome"
+    options.binary_location = "/opt/google/chrome/google-chrome"
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
