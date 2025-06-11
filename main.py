@@ -11,19 +11,18 @@ app = Flask(__name__)
 
 @app.route("/")
 def run_script():
-    # Étape 1 : Authentification Google Sheets
+    # Authentification Google Sheets
     json_keyfile = "/etc/secrets/credentials.json"
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/1ZGZdBOn3nbOd7LVOG6-LSQ9jfxGlXEtxhLD7YYvWzd8/edit"
 
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     credentials = ServiceAccountCredentials.from_json_keyfile_name(json_keyfile, scope)
     client = gspread.authorize(credentials)
-
     sheet = client.open_by_url(spreadsheet_url).worksheet("Labs-Massachusetts")
 
-    # Étape 2 : Configuration Chrome compatible avec Render
+    # Configuration de Chrome
     options = Options()
-    options.binary_location = "/usr/bin/google-chrome"
+    options.binary_location = "/opt/google/chrome/google-chrome"
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
@@ -54,8 +53,9 @@ def run_script():
 
     driver.quit()
 
-    # Étape 3 : Mise à jour Google Sheet
+    # Mise à jour Google Sheets
     sheet.resize(rows=3)
     sheet.update("A4", labs)
 
     return f"{len(labs)} laboratoires actifs mis à jour avec succès ✅"
+
