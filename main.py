@@ -21,14 +21,14 @@ def run_script():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto("https://masscannabiscontrol.com/licensing-tracker/")
-        page.wait_for_timeout(5000)
+        page.goto("https://masscannabiscontrol.com/licensing-tracker/", timeout=0)
+        page.wait_for_selector(".licensee")
 
         licensees = page.query_selector_all(".licensee")
 
         for el in licensees:
             try:
-                parent = el.evaluate_handle("el => el.closest('.license-row')")
+                parent = el.evaluate_handle("el => el.closest('.license-row')").as_element()
                 name = el.inner_text().strip()
                 license_type = parent.query_selector(".license-type").inner_text().strip()
                 location = parent.query_selector(".license-location").inner_text().strip()
@@ -48,3 +48,8 @@ def run_script():
     sheet.update("A4", labs)
 
     return f"{len(labs)} laboratoires actifs mis à jour avec succès ✅"
+
+
+@app.route("/health")
+def health():
+    return "OK"
