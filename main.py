@@ -6,19 +6,21 @@ from playwright.sync_api import sync_playwright
 app = Flask(__name__)
 
 @app.route("/")
+def health_check():
+    return "✅ API up and running!"
+
+@app.route("/run")
 def run_script():
     try:
         # Authentification Google Sheets
         json_keyfile = "/etc/secrets/credentials.json"
         spreadsheet_url = "https://docs.google.com/spreadsheets/d/1ZGZdBOn3nbOd7LVOG6-LSQ9jfxGlXEtxhLD7YYvWzd8/edit"
-
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
         credentials = ServiceAccountCredentials.from_json_keyfile_name(json_keyfile, scope)
         client = gspread.authorize(credentials)
         sheet = client.open_by_url(spreadsheet_url).worksheet("Labs-Massachusetts")
 
         labs = []
-
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
@@ -39,19 +41,15 @@ def run_script():
                     if "Independent Testing Laboratory" in license_type:
                         labs.append([name, license_type, location, priority, summary, "", "", "Active"])
                 except Exception as e:
-                    print("Erreur sur un élément:", e)
+                    print("❌ Erreur sur un élément:", e)
                     continue
 
             browser.close()
 
-        # Mise à jour Google Sheets
         sheet.resize(rows=3)
         sheet.update("A4", labs)
 
-        print(f"{len(labs)} laboratoires actifs mis à jour avec succès ✅")  # 🐛 debug console
-
-        return f"{len(labs)} laboratoires actifs mis à jour avec succès ✅"
+        return f"✅ {len(labs)} laboratoires actifs mis à jour avec succès"
     
     except Exception as e:
-        print("❌ Une erreur est survenue :", e)
-        return f"❌ Erreur lors de l'exécution : {e}"
+        return f"❌ Erreur dans le script: {str(e)}"
