@@ -1,11 +1,7 @@
 from flask import Flask
-import time
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.common.by import By
+from playwright.sync_api import sync_playwright
 
 app = Flask(__name__)
 
@@ -20,42 +16,35 @@ def run_script():
     client = gspread.authorize(credentials)
     sheet = client.open_by_url(spreadsheet_url).worksheet("Labs-Massachusetts")
 
-    # Configuration de Chrome
-    options = Options()
-    options.binary_location = "/opt/google/chrome/google-chrome"
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-
-    chrome_service = ChromeService(executable_path="/opt/render/project/.render/chromedriver/stable/chromedriver")
-    driver = webdriver.Chrome(service=chrome_service, options=options)
-
-    driver.get("https://masscannabiscontrol.com/licensing-tracker/")
-    time.sleep(5)
-
-    elements = driver.find_elements(By.CLASS_NAME, "licensee")
     labs = []
 
-    for el in elements:
-        try:
-            parent = el.find_element(By.XPATH, "..")
-            name = el.text.strip()
-            license_type = parent.find_element(By.CLASS_NAME, "license-type").text.strip()
-            location = parent.find_element(By.CLASS_NAME, "license-location").text.strip()
-            priority = parent.find_element(By.CLASS_NAME, "license-priority").text.strip()
-            summary = parent.find_element(By.CLASS_NAME, "executive-summary").text.strip()
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        page.goto("https://masscannabiscontrol.com/licensing-tracker/")
+        page.wait_for_timeout(5000)
 
-            if "Independent Testing Laboratory" in license_type:
-                labs.append([name, license_type, location, priority, summary, "", "", "Active"])
-        except Exception as e:
-            print("Erreur sur un élément:", e)
-            continue
+        licensees = page.query_selector_all(".licensee")
 
-    driver.quit()
+        for el in licensees:
+            try:
+                parent = el.evaluate_handle("el => el.closest('.license-row')")
+                name = el.inner_text().strip()
+                license_type = parent.query_selector(".license-type").inner_text().strip()
+                location = parent.query_selector(".license-location").inner_text().strip()
+                priority = parent.query_selector(".license-priority").inner_text().strip()
+                summary = parent.query_selector(".executive-summary").inner_text().strip()
+
+                if "Independent Testing Laboratory" in license_type:
+                    labs.append([name, license_type, location, priority, summary, "", "", "Active"])
+            except Exception as e:
+                print("Erreur sur un élément:", e)
+                continue
+
+        browser.close()
 
     # Mise à jour Google Sheets
     sheet.resize(rows=3)
     sheet.update("A4", labs)
 
     return f"{len(labs)} laboratoires actifs mis à jour avec succès ✅"
-
