@@ -2,9 +2,9 @@ from flask import Flask
 import time
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+import undetected_chromedriver as uc
 
 app = Flask(__name__)
 
@@ -22,12 +22,11 @@ def run_script():
 
     # Étape 2 : Configuration Chromium headless pour Render
     options = Options()
-    options.binary_location = "/usr/bin/chromium-browser"
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    driver = webdriver.Chrome(options=options)
+    driver = uc.Chrome(options=options)
     driver.get("https://masscannabiscontrol.com/licensing-tracker/")
     time.sleep(5)
 
